@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="beae83c4-e880-4c2a-a520-3334d558d3df" name="Default" comment="" />
+    <list default="true" id="beae83c4-e880-4c2a-a520-3334d558d3df" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/Artout/user/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Artout/user/models.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -11,11 +13,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Artout/settings.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="391">
               <caret line="41" column="31" selection-start-line="41" selection-start-column="31" selection-end-line="41" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Artout/user/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+              <folding>
+                <element signature="e#0#39#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -62,6 +76,7 @@
         <option value="$PROJECT_DIR$/Artout/urls.py" />
         <option value="$PROJECT_DIR$/api/urls.py" />
         <option value="$PROJECT_DIR$/Artout/settings.py" />
+        <option value="$PROJECT_DIR$/Artout/user/models.py" />
       </list>
     </option>
   </component>
@@ -101,6 +116,12 @@
               <item name="artout-backend" type="b2602c69:ProjectViewProjectNode" />
               <item name="artout-backend" type="462c0819:PsiDirectoryNode" />
               <item name="Artout" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="artout-backend" type="b2602c69:ProjectViewProjectNode" />
+              <item name="artout-backend" type="462c0819:PsiDirectoryNode" />
+              <item name="Artout" type="462c0819:PsiDirectoryNode" />
+              <item name="user" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -221,6 +242,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
           <caret line="41" column="31" selection-start-line="41" selection-start-column="31" selection-end-line="41" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Artout/user/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
