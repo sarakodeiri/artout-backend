@@ -4,7 +4,7 @@ from Artout.user.views import RegisterView
 from rest_framework_simplejwt import views as jwt_views
 from Artout.user.views import LoginView
 
-url_pattern = [
+urlpatterns = [
     path('users/', include('Artout.user.urls')),
     path('register/',RegisterView.as_view()),
     path('login/', LoginView.as_view(), name='token_obtain_pair'),
