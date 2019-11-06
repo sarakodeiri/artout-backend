@@ -45,3 +45,9 @@ class LoginView(TokenObtainPairView):
             serializer.validated_data['id'] = user.id
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserList(generics.ListAPIView):
+    permission_class = (AllowAny,)
+    serializer_class = serializers.UserSerializer
+    queryset = UserProfile.objects.all()
