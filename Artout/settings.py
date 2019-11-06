@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'rest_framework_simplejwt',
+    'Artout.user'
 ]
 
 MIDDLEWARE = [
@@ -72,6 +73,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Artout.wsgi.application'
+AUTH_USER_MODEL = 'user.UserProfile'
 
 FCM_SERVER_KEY = "AAAARJbHzUY:APA91bFNpOqq-b9PRlcCOUj_ClGcmbYWKTMVEQRab1BDoJDgmbj2iwiOCO2oo-PBcJpP1HvLSEnoetWmuweYYJwmifGrd8x31FSUHgCN7qOlHhHkypevcIYF6p77AqS3FAB-ZznnDcbo"
 FCM_DJANGO_SETTINGS = {

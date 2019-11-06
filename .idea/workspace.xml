@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="beae83c4-e880-4c2a-a520-3334d558d3df" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/artout-backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artout-backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Artout/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Artout/settings.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
