@@ -26,7 +26,7 @@ SECRET_KEY = 'ck)iek4jx7a-o7$^fx8hfh(*=@co#&a0$vd0o_p%i6)h@78&%y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['35.202.66.168']
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'rest_framework_simplejwt',
+    'Artout.user'
 ]
 
 MIDDLEWARE = [
@@ -72,6 +73,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Artout.wsgi.application'
+AUTH_USER_MODEL = 'user.UserProfile'
 
 FCM_SERVER_KEY = "AAAARJbHzUY:APA91bFNpOqq-b9PRlcCOUj_ClGcmbYWKTMVEQRab1BDoJDgmbj2iwiOCO2oo-PBcJpP1HvLSEnoetWmuweYYJwmifGrd8x31FSUHgCN7qOlHhHkypevcIYF6p77AqS3FAB-ZznnDcbo"
 FCM_DJANGO_SETTINGS = {
