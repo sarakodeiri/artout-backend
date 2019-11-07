@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from Artout.event import models
+from Artout.event.models import Location
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -18,7 +19,9 @@ class EventSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         location = validated_data.pop('location')
         event = models.Event.objects.create(**validated_data)
-        models.Location.objects.create(**location)
+        location = models.Location.objects.create(**location)
+        event.location = location
+        event.save()
         return event
 
 
