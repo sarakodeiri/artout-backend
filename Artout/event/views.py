@@ -36,5 +36,7 @@ class EventList(generics.ListCreateAPIView):
                 return Response("User not found!", status=status.HTTP_404_NOT_FOUND)
 
 
-class EventDetail(generics.RetrieveUpdateDestroyAPIView):
-    pass
+class EventDetail(generics.RetrieveUpdateAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = EventSerializer
+    queryset = Event.objects.all()
