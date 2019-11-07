@@ -20,4 +20,5 @@ class CheckIn(models.Model):
 
 
 class Location(models.Model):
-    pass
+    longitude = models.FloatField()
+    latitude = models.FloatField()
