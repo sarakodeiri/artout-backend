@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'rest_framework_simplejwt',
-    'Artout.user'
+    'Artout.user',
+    'rest_framework_swagger'
 ]
 
 MIDDLEWARE = [
