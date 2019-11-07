@@ -15,7 +15,7 @@ User = get_user_model()
 
 class RegisterView(generics.CreateAPIView):
     """
-        Register a new user with the user data
+        Register a new user with the required data
     """
     permission_classes = (AllowAny,)
     serializer_class = serializers.RegisterSerializer
@@ -33,7 +33,7 @@ class RegisterView(generics.CreateAPIView):
 
 class LoginView(TokenObtainPairView):
     """
-        Get Refresh And Access Token by Username and Password Given
+        Get a Refresh And an Access Token for a valid username and password pair
     """
     serializer_class = serializers.LoginSerializer
     permission_classes = (AllowAny,)
@@ -48,6 +48,9 @@ class LoginView(TokenObtainPairView):
 
 
 class UserList(generics.ListAPIView):
+    """
+        Get a list of all users registered in the system
+    """
     permission_class = (AllowAny,)
     serializer_class = serializers.UserSerializer
     queryset = UserProfile.objects.all()
