@@ -2,6 +2,12 @@ from rest_framework import serializers
 from Artout.event import models
 
 
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Location
+        fields = ('longitude', 'latitude')
+
+
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Event
