@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="beae83c4-e880-4c2a-a520-3334d558d3df" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/Artout/user/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Artout/user/admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Artout/event/migrations/0002_auto_20191107_1907.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Artout/event/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Artout/event/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Artout/event/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Artout/event/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Artout/event/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Artout/event/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -52,7 +58,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DJANGO_SETTINGS_MODULE" value="Artout.settings" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\Users\Sara\AppData\Local\Programs\Python\Python37-32\python.exe" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -61,7 +67,7 @@
       <option name="port" value="8000" />
       <option name="host" value="" />
       <option name="additionalOptions" value="" />
-      <option name="browserUrl" value="" />
+      <option name="browserUrl" value="http://127.0.0.1:8000/" />
       <option name="runTestServer" value="false" />
       <option name="runNoReload" value="false" />
       <option name="useCustomRunCommand" value="false" />

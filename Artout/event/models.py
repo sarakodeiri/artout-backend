@@ -13,10 +13,13 @@ class Event(models.Model):
     description = models.TextField(blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
-    rate = models.IntegerField(blank=True)
-    picture = models.CharField(blank=True, max_length=2000)
+    rate = models.IntegerField(blank=True, null=True)
+    picture_url = models.CharField(null=True, blank=True, max_length=2000)
     event_owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
 
 
 class CheckIn(models.Model):
