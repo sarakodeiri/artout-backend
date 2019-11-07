@@ -5,7 +5,7 @@ from Artout.user.models import UserProfile
 class Location(models.Model):
     longitude = models.FloatField()
     latitude = models.FloatField()
-    
+
 
 class Event(models.Model):
     id = models.AutoField(primary_key=True)
