@@ -26,7 +26,7 @@ SECRET_KEY = 'ck)iek4jx7a-o7$^fx8hfh(*=@co#&a0$vd0o_p%i6)h@78&%y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['35.202.66.168']
+ALLOWED_HOSTS = ['35.202.66.168', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'rest_framework_simplejwt',
-    'Artout.user'
+    'Artout.user',
     'Artout.event'
 ]
 
