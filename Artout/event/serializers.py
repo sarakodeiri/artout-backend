@@ -31,6 +31,7 @@ class EventSerializer(serializers.ModelSerializer):
         instance.start_date = validated_data.get('start_date', instance.start_date)
         instance.end_date = validated_data.get('end_date', instance.end_date)
         instance.picture_url = validated_data.get('picture_url', instance.picture_url)
+        instance.category = validated_data.get('category', instance.category)
         if location is not None:
             instance.location = Location(longitude=location['longitude'],latitude=location['latitude'])
         return instance
