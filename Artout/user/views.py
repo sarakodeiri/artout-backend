@@ -20,14 +20,15 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = serializers.RegisterSerializer
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
             user = serializer.save()
             serializer_user = serializers.UserSerializer(user)
-            data = {"id": serializer_user.data["id"]}
-            return Response(data=data, status=status.HTTP_201_CREATED)
+            tokens = serializer.data['tokens']
+            data = {"refresh": tokens["refresh"], "access": tokens["access"], "id": serializer_user.data["id"]}
+            return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
