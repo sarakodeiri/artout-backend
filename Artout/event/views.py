@@ -57,8 +57,14 @@ class EventListDetail(generics.ListCreateAPIView):
             try:
                 user = UserProfile.objects.get(id=user_id)
                 user_events = Event.objects.filter(event_owner=user)
-                serializer = self.serializer_class(data=user_events)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+
+                page = self.paginate_queryset(user_events)
+                if page is not None:
+                    serializer = self.get_serializer(page, many=True)
+                    return self.get_paginated_response(serializer.data)
+
+                serializer = self.get_serializer(user_events, many=True)
+                return Response(serializer.data)
             except ObjectDoesNotExist:
                 return Response("User not found!", status=status.HTTP_404_NOT_FOUND)
 
