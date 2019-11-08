@@ -73,3 +73,8 @@ class EventDetail(generics.RetrieveUpdateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = EventSerializer
     queryset = Event.objects.all()
+
+class EventCheckin(generics.CreateAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = CheckinSerializer
+
