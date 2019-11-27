@@ -21,8 +21,9 @@ class Event(models.Model):
 class CheckIn(models.Model):
     event = models.ForeignKey(Event, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True)
-    check_in_time = models.DateField()
-    go_time = models.DateField()
+    check_in_time = models.DateTimeField()
+    go_time = models.DateTimeField()
+
 
 
 
