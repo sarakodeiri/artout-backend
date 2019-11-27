@@ -24,6 +24,8 @@ class CheckIn(models.Model):
     check_in_time = models.DateTimeField()
     go_time = models.DateTimeField()
 
+    def __str__(self):
+        return "CheckIn to " + self.event.title
 
 
 
