@@ -1,5 +1,10 @@
-from django.contrib.gis.db import models
+# from django.contrib.gis.db import models
+from django.db import models
 from Artout.user.models import UserProfile
+
+
+class Location(models.Model):
+    pass
 
 
 class Event(models.Model):
@@ -11,7 +16,7 @@ class Event(models.Model):
     rate = models.IntegerField(blank=True, null=True)
     picture_url = models.CharField(null=True, blank=True, max_length=2000)
     event_owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    location = models.PointField()
+    # location = models.PointField()
     category = models.CharField(max_length=20)
 
     def __str__(self):

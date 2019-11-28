@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'django.contrib.gis',
+    # 'django.contrib.gis',
     'api',
     'rest_framework_simplejwt',
     'Artout.user',
