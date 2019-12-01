@@ -4,8 +4,8 @@ from Artout.user.models import UserProfile
 
 
 class Location(models.Model):
-    longitude = models.FloatField(null=True)
-    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(default=0)
+    latitude = models.FloatField(default=0)
 
 
 class Event(models.Model):
@@ -17,9 +17,8 @@ class Event(models.Model):
     rate = models.IntegerField(blank=True, null=True)
     picture_url = models.CharField(null=True, blank=True, max_length=2000)
     event_owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
+    location = models.ForeignKey(Location, on_delete=models.PROTECT)
     category = models.CharField(blank=True, null=True, max_length=20)
-
 
     def __str__(self):
         return self.title
