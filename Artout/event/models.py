@@ -17,7 +17,7 @@ class Event(models.Model):
     picture_url = models.CharField(null=True, blank=True, max_length=2000)
     event_owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     # location = models.PointField()
-    category = models.CharField(max_length=20)
+    category = models.CharField(blank=True, null=True, max_length=20)
 
     def __str__(self):
         return self.title

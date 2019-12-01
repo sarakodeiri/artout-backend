@@ -34,6 +34,7 @@ class EventSerializer(serializers.ModelSerializer):
         instance.category = validated_data.get('category', instance.category)
         if location is not None:
             instance.location = Location(longitude=location['longitude'],latitude=location['latitude'])
+        instance.save()
         return instance
 
 
