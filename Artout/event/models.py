@@ -8,15 +8,13 @@ class Location(models.Model):
 
 
 class Event(models.Model):
-    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    rate = models.IntegerField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
     picture_url = models.CharField(null=True, blank=True, max_length=2000)
     event_owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
+    location = models.ForeignKey(Location, on_delete=models.PROTECT)
     category = models.CharField(max_length=20)
 
     def __str__(self):
