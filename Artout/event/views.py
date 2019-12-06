@@ -42,3 +42,7 @@ class EventCheckin(generics.CreateAPIView):
                 return Response('Checked-in', status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EventCheckinDetail(generics.DestroyAPIView):
+    pass
