@@ -3,8 +3,8 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import *
-from .models import *
+from .serializers import EventSerializer, CheckinSerializer
+from .models import Event, UserProfile, CheckIn
 from django.core.exceptions import *
 from django.http import JsonResponse, HttpResponseBadRequest
 
