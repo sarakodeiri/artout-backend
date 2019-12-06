@@ -16,7 +16,7 @@ class EventList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = get_object_or_404(UserProfile, pk=self.kwargs['id'])
-        return Event.objects.filter(event_owner__id=user.id)
+        return Event.objects.filter(owner__id=user.id)
 
 
 class EventDetail(generics.RetrieveUpdateAPIView):
@@ -30,7 +30,7 @@ class EventCheckin(generics.CreateAPIView):
     serializer_class = CheckinSerializer
 
     def post(self, request, *args, **kwargs):
-        user = UserProfile.objects.get(id= request.data['user'])
+        user = UserProfile.objects.get(id=request.data['user'])
         event = Event.objects.get(id=request.data['event'])
         if CheckIn.objects.filter(event=event, user=user).exists():
             CheckIn.objects.get(event=event, user=user).delete()

@@ -13,7 +13,7 @@ class Event(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     picture_url = models.CharField(null=True, blank=True, max_length=2000)
-    event_owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.PROTECT)
     category = models.CharField(max_length=20)
 
