@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from Artout.event import models
-from Artout.event.models import Location
+from event import models
+from event.models import Location
 
 
 class LocationSerializer(serializers.ModelSerializer):

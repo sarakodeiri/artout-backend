@@ -1,5 +1,5 @@
 from django.db import models
-from Artout.user.models import UserProfile
+from user.models import UserProfile
 
 
 class Location(models.Model):
