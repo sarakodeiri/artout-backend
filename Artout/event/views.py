@@ -11,7 +11,6 @@ from django.http import JsonResponse, HttpResponseBadRequest
 
 class EventList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
-    queryset = Event.objects.all()
     serializer_class = EventSerializer
 
     def get_queryset(self):
@@ -31,27 +30,23 @@ class EventList(generics.ListCreateAPIView):
 
 class EventDetail(generics.RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = EventSerializer
     queryset = Event.objects.all()
+    serializer_class = EventSerializer
 
 
-class EventCheckin(generics.CreateAPIView):
-    permission_classes = (AllowAny,)
+class EventCheckinList(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
     serializer_class = CheckinSerializer
 
-    def post(self, request, *args, **kwargs):
-        user = UserProfile.objects.get(id=request.data['user'])
-        event = Event.objects.get(id=request.data['event'])
-        if CheckIn.objects.filter(event=event, user=user).exists():
-            CheckIn.objects.get(event=event, user=user).delete()
-            return Response('Unchecked', status=status.HTTP_200_OK)
-        else:
-            serializer = self.serializer_class(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response('Checked-in', status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        user = request.user
+        data["user"] = user
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class EventCheckinDetail(generics.DestroyAPIView):
