@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -6,9 +6,6 @@ from rest_framework import status
 from .serializers import EventSerializer, CheckinSerializer
 from .models import Event, UserProfile, CheckIn
 from django.http import HttpResponseForbidden
-
-from django.core.exceptions import *
-from django.http import JsonResponse, HttpResponseBadRequest
 
 
 class EventList(generics.ListCreateAPIView):
@@ -40,7 +37,7 @@ class EventDetail(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        if request.user == instance.owner:
+        if request.user != instance.owner:
             return HttpResponseForbidden()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
@@ -50,16 +47,20 @@ class EventDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if request.user == instance.owner:
+        if request.user != instance.owner:
             return HttpResponseForbidden()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
 class EventCheckinList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = CheckinSerializer
+
+    def get_queryset(self):
+        event_id = self.kwargs.get('eid')
+        event = get_object_or_404(Event, id=event_id)
+        return CheckIn.objects.filter(event=event)
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -73,4 +74,9 @@ class EventCheckinList(generics.ListCreateAPIView):
 
 
 class EventCheckinDetail(generics.DestroyAPIView):
-    pass
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if request.user != instance.owner:
+            return HttpResponseForbidden()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
