@@ -1,20 +1,22 @@
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
+
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import EventSerializer, CheckinSerializer
-from .models import Event, UserProfile, CheckIn
-from django.http import HttpResponseForbidden
+
+from . import serializers
+from . import models
 
 
 class EventList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = EventSerializer
+    serializer_class = serializers.EventSerializer
 
     def get_queryset(self):
         owner_id = self.request.query_params.get('owner')
-        return Event.objects.filter(owner_id=owner_id)
+        return models.Event.objects.filter(owner_id=owner_id)
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -29,10 +31,15 @@ class EventList(generics.ListCreateAPIView):
 
 class EventDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = EventSerializer
+    serializer_class = serializers.EventSerializer
+    queryset = models.Event.objects.all()
 
-    def get_queryset(self):
-        return Event.objects.filter(id=self.kwargs['eid'])
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        # make sure to catch 404's below
+        obj = get_object_or_404(queryset, pk=self.kwargs['eid'])
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -55,12 +62,12 @@ class EventDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class EventCheckinList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = CheckinSerializer
+    serializer_class = serializers.CheckinSerializer
 
     def get_queryset(self):
         event_id = self.kwargs.get('eid')
-        event = get_object_or_404(Event, id=event_id)
-        return CheckIn.objects.filter(event=event)
+        event = get_object_or_404(models.Event, id=event_id)
+        return models.CheckIn.objects.filter(event=event)
 
     def create(self, request, *args, **kwargs):
         data = request.data
