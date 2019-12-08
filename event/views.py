@@ -36,7 +36,6 @@ class EventDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        # make sure to catch 404's below
         obj = get_object_or_404(queryset, pk=self.kwargs['eid'])
         self.check_object_permissions(self.request, obj)
         return obj
@@ -72,7 +71,7 @@ class EventCheckinList(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         data = request.data
         user = request.user
-        data["user"] = user
+        data["user"] = user.id
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -81,9 +80,10 @@ class EventCheckinList(generics.ListCreateAPIView):
 
 
 class EventCheckinDetail(generics.DestroyAPIView):
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if request.user != instance.owner:
-            return HttpResponseForbidden()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    queryset = models.CheckIn.objects.all()
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = get_object_or_404(queryset, pk=self.kwargs['cid'])
+        self.check_object_permissions(self.request, obj)
+        return obj
+
