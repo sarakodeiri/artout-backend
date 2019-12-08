@@ -6,9 +6,11 @@ from user import models
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    tokens = serializers.SerializerMethodField()
+
     class Meta:
         model = models.UserProfile
-        fields = ('email', 'first_name', 'last_name', 'date_joined', 'avatar', 'username','password')
+        fields = ('email', 'first_name', 'last_name', 'date_joined', 'avatar', 'username','password', 'tokens')
         extra_kwargs = {'password': {'write_only': True}}
 
     def get_tokens(self, user):
