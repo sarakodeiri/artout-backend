@@ -1,12 +1,11 @@
 from rest_framework import serializers
-from event import models
-from event.models import Location
+from . import models
 
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Location
-        fields = ('longitude', 'latitude')
+        fields = ('id', 'longitude', 'latitude')
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -14,13 +13,13 @@ class EventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Event
-        fields = ('title', 'description', 'start_date', 'end_date', 'picture_url', 'event_owner', 'location', 'category')
+        fields = ('title', 'description', 'start_date', 'end_date', 'picture_url', 'owner', 'location', 'category')
 
     def create(self, validated_data):
         location = validated_data.pop('location')
-        event = models.Event.objects.create(**validated_data)
         location = models.Location.objects.create(**location)
-        event.location = location
+        validated_data['location'] = location
+        event = models.Event.objects.create(**validated_data)
         event.save()
         return event
 
@@ -32,8 +31,7 @@ class EventSerializer(serializers.ModelSerializer):
         instance.end_date = validated_data.get('end_date', instance.end_date)
         instance.picture_url = validated_data.get('picture_url', instance.picture_url)
         instance.category = validated_data.get('category', instance.category)
-        if location is not None:
-            instance.location = Location(longitude=location['longitude'],latitude=location['latitude'])
+        models.Location.objects.update(**validated_data)
         return instance
 
 

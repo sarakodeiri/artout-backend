@@ -19,7 +19,7 @@ class EventList(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         data = request.data
         user = request.user
-        data["owner"] = user
+        data["owner"] = user.id
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
