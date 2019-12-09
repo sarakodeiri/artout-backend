@@ -24,12 +24,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        return models.UserProfile.objects.create_user(username=validated_data["username"],
-                                                      email=validated_data["email"],
-                                                      password=validated_data["password"],
-                                                      first_name=validated_data["first_name"],
-                                                      last_name=validated_data["last_name"],
-                                                      avatar=validated_data["avatar"])
+        return models.UserProfile.objects.create_user(username=validated_data.get("username"),
+                                                      email=validated_data.get("email"),
+                                                      password=validated_data.get("password"),
+                                                      first_name=validated_data.get("first_name"),
+                                                      last_name=validated_data.get("last_name"),
+                                                      avatar=validated_data.get("avatar"))
 
 
 class LoginSerializer(TokenObtainPairSerializer):
