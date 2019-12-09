@@ -81,9 +81,12 @@ class EventCheckinList(generics.ListCreateAPIView):
 
 class EventCheckinDetail(generics.DestroyAPIView):
     queryset = models.CheckIn.objects.all()
+
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         obj = get_object_or_404(queryset, pk=self.kwargs['cid'])
+        if self.request.user != obj.owner:
+            return HttpResponseForbidden()
         self.check_object_permissions(self.request, obj)
         return obj
 
