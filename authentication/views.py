@@ -19,13 +19,13 @@ class RegisterView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
 
-        if serializer.is_valid():
-            user = serializer.save()
-            serializer_user = user_serializers.UserSerializer(user)
-            tokens = serializer.data['tokens']
-            data = {"refresh": tokens["refresh"], "access": tokens["access"], "id": serializer_user.data["id"]}
-            return Response(data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user = serializer.save()
+        serializer_user = user_serializers.UserSerializer(user)
+        tokens = serializer.data['tokens']
+        data = {"refresh": tokens["refresh"], "access": tokens["access"], "id": serializer_user.data["id"]}
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
 class LoginView(TokenObtainPairView):
