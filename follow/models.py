@@ -9,3 +9,8 @@ class FollowRequest(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 
+class Follow(models.Model):
+    follower = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="following")
+    followee = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="followers")
+    created = models.DateTimeField(auto_now_add=True)
+
