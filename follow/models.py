@@ -25,10 +25,14 @@ class FollowRequest(models.Model):
 class FollowManager(models.Manager):
 
     def followers(self, user):
-        return Follow.objects.filter(followee=user)
+        follow_objects = Follow.objects.select_related('follower').filter(followee=user)
+        followers = [follow_object.follower for follow_object in follow_objects]
+        return followers
 
     def followings(self, user):
-        return Follow.objects.filter(follower=user)
+        follow_objects = Follow.objects.select_related('followee').filter(follower=user)
+        followees = [follow_object.followee for follow_object in follow_objects]
+        return followees
 
     def follower(self, from_user, to_user):
         if to_user.is_private:
@@ -44,10 +48,14 @@ class FollowManager(models.Manager):
             return False
 
     def requests(self, user):
-        return FollowRequest.objects.filter(to_user=user)
+        follow_request_objects = FollowRequest.objects.select_related('from_user').filter(to_user=user)
+        requests = [follow_request_object.from_user for follow_request_object in follow_request_objects]
+        return requests
 
     def pendings(self, user):
-        return FollowRequest.objects.filter(from_user=user)
+        follow_request_objects = FollowRequest.objects.select_related('to_user').filter(from_user=user)
+        pendings = [follow_request_object.to_user for follow_request_object in follow_request_objects]
+        return pendings
 
     def is_follower(self, follower, followee):
         return Follow.objects.filter(follower=follower, followee=followee).exists()
