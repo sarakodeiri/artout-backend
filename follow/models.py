@@ -30,17 +30,17 @@ class FollowManager(models.Manager):
     def followings(self, user):
         return Follow.objects.filter(follower=user)
 
-    def add_follower(self, from_user, to_user):
+    def follower(self, from_user, to_user):
         if to_user.is_private:
             return FollowRequest.objects.create(follower=from_user, followee=to_user), "Requested"
         else:
             return Follow.objects.create(from_user=from_user, to_user=to_user), "Added"
 
     def unfollow(self, follower, followee):
-        try:
+        if self.is_follower(follower,followee):
             Follow.objects.get(followee=followee, follower=follower).delete()
             return True
-        except models.Model.DoesNotExist:
+        else:
             return False
 
     def requests(self, user):
@@ -48,6 +48,9 @@ class FollowManager(models.Manager):
 
     def pendings(self, user):
         return FollowRequest.objects.filter(from_user=user)
+
+    def is_follower(self, follower, followee):
+        return Follow.objects.filter(follower=follower, followee=followee).exists()
 
 
 class Follow(models.Model):
