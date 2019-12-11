@@ -9,7 +9,7 @@ class FollowRequest(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def accept(self):
-        follow = Follow.objects.create(follower=self.from_user, followee=self.to_user)
+        Follow.objects.create(follower=self.from_user, followee=self.to_user)
         self.delete()
         return True
 
@@ -22,8 +22,38 @@ class FollowRequest(models.Model):
         return True
 
 
+class FollowManager(models.Manager):
+
+    def followers(self, user):
+        return Follow.objects.filter(followee=user)
+
+    def followings(self, user):
+        return Follow.objects.filter(follower=user)
+
+    def add_follower(self, from_user, to_user):
+        if to_user.is_private:
+            return FollowRequest.objects.create(follower=from_user, followee=to_user), "Requested"
+        else:
+            return Follow.objects.create(from_user=from_user, to_user=to_user), "Added"
+
+    def unfollow(self, follower, followee):
+        try:
+            Follow.objects.get(followee=followee, follower=follower).delete()
+            return True
+        except models.Model.DoesNotExist:
+            return False
+
+    def requests(self, user):
+        return FollowRequest.objects.filter(to_user=user)
+
+    def pendings(self, user):
+        return FollowRequest.objects.filter(from_user=user)
+
+
 class Follow(models.Model):
-    follower = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="following")
+    follower = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="followings")
     followee = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="followers")
     created = models.DateTimeField(auto_now_add=True)
+    object = FollowManager()
+
 
