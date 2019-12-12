@@ -65,6 +65,6 @@ class Follow(models.Model):
     follower = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="followings")
     followee = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="followers")
     created_at = models.DateTimeField(auto_now_add=True)
-    object = FollowManager()
+    objects = FollowManager()
 
 
