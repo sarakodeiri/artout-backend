@@ -6,7 +6,7 @@ from user.models import UserProfile
 class FollowRequest(models.Model):
     from_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="follow_pendings")
     to_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="follow_requests")
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def accept(self):
         Follow.objects.create(follower=self.from_user, followee=self.to_user)
@@ -64,7 +64,7 @@ class FollowManager(models.Manager):
 class Follow(models.Model):
     follower = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="followings")
     followee = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="followers")
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     object = FollowManager()
 
 
