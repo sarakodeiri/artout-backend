@@ -41,10 +41,10 @@ class FollowManager(models.Manager):
             return Follow.objects.create(from_user=from_user, to_user=to_user), "Added"
 
     def remove_follower(self, follower, followee):
-        if self.is_follower(follower,followee):
+        try:
             Follow.objects.get(followee=followee, follower=follower).delete()
             return True
-        else:
+        except models.ObjectDoesNotExist:
             return False
 
     def requests(self, user):
