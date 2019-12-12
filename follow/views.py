@@ -38,26 +38,24 @@ class FollowersList(generics.ListAPIView):
 
 class FollowingsDetail(generics.RetrieveDestroyAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = user_serializers.UserPreviewSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return follow_models.Follow.objects.followings(user)
+    serializer_class = user_serializers.UserSerializer
+    queryset = user_models.UserProfile.objects.all()
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         obj = get_object_or_404(queryset, pk=self.kwargs['uid'])
         self.check_object_permissions(self.request, obj)
         return obj
+
+    def perform_destroy(self, instance):
+        follower = self.request.user
+        follow_models.Follow.objects.remove_follower(follower, instance)
 
 
 class FollowersDetail(generics.RetrieveDestroyAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = user_serializers.UserPreviewSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return follow_models.Follow.objects.followers(user)
+    serializer_class = user_serializers.UserSerializer
+    queryset = user_models.UserProfile.objects.all()
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
@@ -65,3 +63,6 @@ class FollowersDetail(generics.RetrieveDestroyAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
+    def perform_destroy(self, instance):
+        followee = self.request.user
+        follow_models.Follow.objects.remove_follower(instance, followee)
