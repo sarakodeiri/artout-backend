@@ -20,3 +20,17 @@ class FollowingsList(generics.ListAPIView):
         else:
             user = get_object_or_404(user_models.UserProfile, id=user_id)
             return follow_models.Follow.objects.followings(user)
+
+
+class FollowersList(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = user_serializers.UserPreviewSerializer
+
+    def get_queryset(self):
+        user_id = self.request.query_params.get('user')
+        if user_id is None:
+            user = self.request.user
+            return follow_models.Follow.objects.followers(user)
+        else:
+            user = get_object_or_404(user_models.UserProfile, id=user_id)
+            return follow_models.Follow.objects.followers(user)

@@ -4,4 +4,5 @@ from . import views
 
 urlpatterns = [
     path('followings/', views.FollowingsList.as_view()),
+    path('followers/', views.FollowersList.as_view()),
 ]
