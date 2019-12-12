@@ -19,7 +19,10 @@ class FollowingsList(generics.ListAPIView):
             return follow_models.Follow.objects.followings(user)
         else:
             user = get_object_or_404(user_models.UserProfile, id=user_id)
-            return follow_models.Follow.objects.followings(user)
+            if not user.is_private or follow_models.Follow.objects.is_follower(self.request.user, user):
+                return follow_models.Follow.objects.followings(user)
+            else:
+                return self.permission_denied(self.request, message="This user is private")
 
 
 class FollowersList(generics.ListAPIView):
@@ -33,7 +36,10 @@ class FollowersList(generics.ListAPIView):
             return follow_models.Follow.objects.followers(user)
         else:
             user = get_object_or_404(user_models.UserProfile, id=user_id)
-            return follow_models.Follow.objects.followers(user)
+            if not user.is_private or follow_models.Follow.objects.is_follower(self.request.user, user):
+                return follow_models.Follow.objects.followers(user)
+            else:
+                return self.permission_denied(self.request, message="This user is private")
 
 
 class FollowingsDetail(generics.RetrieveDestroyAPIView):
