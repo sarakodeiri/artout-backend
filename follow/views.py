@@ -1,4 +1,4 @@
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 
 from rest_framework import generics, status
@@ -101,8 +101,18 @@ class PendingsList(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         from_user = self.request.user
-        to_user = self.request.data.get('user')
-        return follow_models.FollowRequestManager.make_request(from_user, to_user)
+        to_user_id = self.request.data.get('user')
+        to_user = get_object_or_404(user_models.UserProfile, pk=to_user_id)
+        code, message = follow_models.FollowRequestManager.make_request(from_user, to_user)
+
+        if code == 1:
+            return HttpResponseForbidden("Can't follow self")
+        elif code == 2:
+            return HttpResponseBadRequest("Already done")
+        elif message == "Requested":
+            return  Response("Request successfully sent", status=status.HTTP_201_CREATED)
+        elif message == "Added":
+            return Response("Followship successfully created", status=status.HTTP_201_CREATED)
 
 
 class RequestsList(generics.ListAPIView):
