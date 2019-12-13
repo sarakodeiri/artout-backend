@@ -3,10 +3,15 @@ from django.db import models
 from user.models import UserProfile
 
 
+class FollowRequestManager(object):
+    pass
+
+
 class FollowRequest(models.Model):
     from_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="follow_pendings")
     to_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="follow_requests")
     created_at = models.DateTimeField(auto_now_add=True)
+    objects = FollowRequestManager()
 
     def accept(self):
         Follow.objects.create(follower=self.from_user, followee=self.to_user)
