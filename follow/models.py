@@ -9,7 +9,11 @@ class FollowRequestManager(models.manager):
         return FollowRequest.objects.create(follower=from_user, followee=to_user), "Requested"
 
     def remove_request(self, from_user, to_user):
-        pass
+        try:
+            Follow.objects.get(from_user=from_user, to_user=to_user).delete()
+            return True
+        except models.ObjectDoesNotExist:
+            return False
 
     def requests(self, user):
         pass
