@@ -100,12 +100,10 @@ class RequestsList(generics.ListAPIView):
     serializer_class = user_serializers.UserPreviewSerializer
 
     def get_queryset(self):
-        user_id = self.request.query_params.get('user')
-        if user_id is None:
-            user = self.request.user
-            return follow_models.FollowRequest.objects.to_user(user)
-        else:
-            return HttpResponseForbidden()
+        user = self.request.user
+        wanted_requests = follow_models.FollowRequest.objects.all().filter(to_user=user)
+        request_senders = [member.from_user for member in wanted_requests]
+        return request_senders
 
 
 class PendingsDetail(object):
