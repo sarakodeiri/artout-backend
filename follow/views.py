@@ -1,3 +1,4 @@
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 
 from rest_framework import generics, status
@@ -90,8 +91,21 @@ class FollowersDetail(generics.RetrieveDestroyAPIView):
             return Response("This user doesn't follow you", status=status.HTTP_404_NOT_FOUND)
 
 
-class RequestsList(object):
+class PendingsList(object):
     pass
+
+
+class RequestsList(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = user_serializers.UserPreviewSerializer
+
+    def get_queryset(self):
+        user_id = self.request.query_params.get('user')
+        if user_id is None:
+            user = self.request.user
+            return follow_models.FollowRequest.objects.to_user(user)
+        else:
+            return HttpResponseForbidden()
 
 
 class PendingsDetail(object):
@@ -102,6 +116,5 @@ class RequestsDetail(object):
     pass
 
 
-class PendingsList(object):
-    pass
+
 
