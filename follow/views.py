@@ -101,7 +101,7 @@ class PendingsList(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         from_user = self.request.user
-        to_user = self.request.query_params.get('user')
+        to_user = self.request.data.get('user')
         return follow_models.FollowRequestManager.make_request(from_user, to_user)
 
 
