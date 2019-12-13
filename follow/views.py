@@ -91,8 +91,18 @@ class FollowersDetail(generics.RetrieveDestroyAPIView):
             return Response("This user doesn't follow you", status=status.HTTP_404_NOT_FOUND)
 
 
-class PendingsList(object):
-    pass
+class PendingsList(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = user_serializers.UserPreviewSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return follow_models.FollowRequestManager.pendings(user)
+
+    def create(self, request, *args, **kwargs):
+        from_user = self.request.user
+        to_user = self.request.query_params.get('user')
+        return follow_models.FollowRequestManager.make_request(from_user, to_user)
 
 
 class RequestsList(generics.ListAPIView):
