@@ -6,7 +6,10 @@ from user.models import UserProfile
 class FollowRequestManager(models.manager):
 
     def make_request(self, from_user, to_user):
-        return FollowRequest.objects.create(follower=from_user, followee=to_user), "Requested"
+        if to_user.is_private:
+            return FollowRequest.objects.create(follower=from_user, followee=to_user), "Requested"
+        else:
+            return Follow.objects.create(from_user=from_user, to_user=to_user), "Added"
 
     def remove_request(self, from_user, to_user):
         try:
