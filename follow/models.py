@@ -13,7 +13,7 @@ class FollowRequestManager(models.manager):
 
     def remove_request(self, from_user, to_user):
         try:
-            Follow.objects.get(from_user=from_user, to_user=to_user).delete()
+            FollowRequest.objects.get(from_user=from_user, to_user=to_user).delete()
             return True
         except models.ObjectDoesNotExist:
             return False
