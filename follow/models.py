@@ -50,12 +50,6 @@ class FollowManager(models.Manager):
         followees = [follow_object.followee for follow_object in follow_objects]
         return followees
 
-    def add_follower(self, from_user, to_user):
-        if to_user.is_private:
-            return FollowRequest.objects.create(follower=from_user, followee=to_user), "Requested"
-        else:
-            return Follow.objects.create(from_user=from_user, to_user=to_user), "Added"
-
     def remove_follower(self, follower, followee):
         try:
             Follow.objects.get(followee=followee, follower=follower).delete()
