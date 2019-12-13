@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from . import models as follow_models
 from user import serializers as user_serializers
@@ -53,9 +54,14 @@ class FollowingsDetail(generics.RetrieveDestroyAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
-    def perform_destroy(self, instance):
-        follower = self.request.user
-        follow_models.Follow.objects.remove_follower(follower, instance)
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        follower =self.request.user
+        removed = follow_models.Follow.objects.remove_following(follower, instance)
+        if removed:
+            return Response("User successfully unfollowed", status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response("You don't follow this user", status=status.HTTP_404_NOT_FOUND)
 
 
 class FollowersDetail(generics.RetrieveDestroyAPIView):
@@ -69,6 +75,11 @@ class FollowersDetail(generics.RetrieveDestroyAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
-    def perform_destroy(self, instance):
-        followee = self.request.user
-        follow_models.Follow.objects.remove_follower(instance, followee)
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        followee =self.request.user
+        removed = follow_models.Follow.objects.remove_following(instance, followee)
+        if removed:
+            return Response("User successfully removed from your follower's list", status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response("This user doesn't follow you", status=status.HTTP_404_NOT_FOUND)
