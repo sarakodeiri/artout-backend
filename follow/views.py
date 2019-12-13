@@ -1,3 +1,17 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+class RequestsList(object):
+    pass
+
+
+class PendingsDetail(object):
+    pass
+
+
+class RequestsDetail(object):
+    pass
+
+
+class PendingsList(object):
+    pass
