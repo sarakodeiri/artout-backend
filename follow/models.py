@@ -21,7 +21,9 @@ class FollowRequestManager(models.manager):
         return requests
 
     def pendings(self, user):
-        return FollowRequest.objects.all().filter(from_user=user)
+        follow_request_objects = FollowRequest.objects.select_related('to_user').filter(from_user=user)
+        pendings = [follow_request_object.to_user for follow_request_object in follow_request_objects]
+        return pendings
 
 
 class FollowRequest(models.Model):
@@ -62,13 +64,6 @@ class FollowManager(models.Manager):
             return True
         except models.ObjectDoesNotExist:
             return False
-
-
-
-    def pendings(self, user):
-        follow_request_objects = FollowRequest.objects.select_related('to_user').filter(from_user=user)
-        pendings = [follow_request_object.to_user for follow_request_object in follow_request_objects]
-        return pendings
 
     def is_follower(self, follower, followee):
         return Follow.objects.filter(follower=follower, followee=followee).exists()
