@@ -67,11 +67,13 @@ class FollowingsDetail(generics.RetrieveDestroyAPIView):
 class FollowersDetail(generics.RetrieveDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = user_serializers.UserSerializer
-    queryset = user_models.UserProfile.objects.all()
+
+    def get_queryset(self):
+        return follow_models.Follow.objects.select_related('follower').filter(followee=self.request.user)
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(queryset, pk=self.kwargs['uid'])
+        obj = get_object_or_404(queryset, follower__id=self.kwargs['uid'])
         self.check_object_permissions(self.request, obj)
         return obj
 
