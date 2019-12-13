@@ -6,7 +6,8 @@ from user.models import UserProfile
 class FollowRequestManager(models.manager):
 
     def make_request(self, from_user, to_user):
-        if Follow.objects.filter(from_user=from_user, to_user=to_user).exists():
+        if FollowRequest.objects.filter(from_user=from_user, to_user=to_user).exists() \
+                or Follow.objects.filter(follower=from_user, followee=to_user).exists():
             return None, "Already following"
 
         if to_user.is_private:
