@@ -16,7 +16,9 @@ class FollowRequestManager(models.manager):
             return False
 
     def requests(self, user):
-        return FollowRequest.objects.all().filter(to_user=user)
+        follow_request_objects = FollowRequest.objects.select_related('from_user').filter(to_user=user)
+        requests = [follow_request_object.from_user for follow_request_object in follow_request_objects]
+        return requests
 
     def pendings(self, user):
         return FollowRequest.objects.all().filter(from_user=user)
@@ -61,10 +63,7 @@ class FollowManager(models.Manager):
         except models.ObjectDoesNotExist:
             return False
 
-    def requests(self, user):
-        follow_request_objects = FollowRequest.objects.select_related('from_user').filter(to_user=user)
-        requests = [follow_request_object.from_user for follow_request_object in follow_request_objects]
-        return requests
+
 
     def pendings(self, user):
         follow_request_objects = FollowRequest.objects.select_related('to_user').filter(from_user=user)
