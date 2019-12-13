@@ -19,7 +19,7 @@ class FollowRequestManager(models.manager):
         return FollowRequest.objects.all().filter(to_user=user)
 
     def pendings(self, user):
-        pass
+        return FollowRequest.objects.all().filter(from_user=user)
 
 
 class FollowRequest(models.Model):
