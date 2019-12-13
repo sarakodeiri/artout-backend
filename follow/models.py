@@ -3,8 +3,19 @@ from django.db import models
 from user.models import UserProfile
 
 
-class FollowRequestManager(object):
-    pass
+class FollowRequestManager(models.manager):
+
+    def make_request(self, from_user, to_user):
+        pass
+
+    def remove_request(self, from_user, to_user):
+        pass
+
+    def requests(self, user):
+        pass
+
+    def pendings(self, user):
+        pass
 
 
 class FollowRequest(models.Model):
