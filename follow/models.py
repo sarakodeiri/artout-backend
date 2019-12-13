@@ -6,7 +6,7 @@ from user.models import UserProfile
 class FollowRequestManager(models.manager):
 
     def make_request(self, from_user, to_user):
-        pass
+        return FollowRequest.objects.create(follower=from_user, followee=to_user), "Requested"
 
     def remove_request(self, from_user, to_user):
         pass
