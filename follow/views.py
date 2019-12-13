@@ -103,11 +103,11 @@ class PendingsList(generics.ListCreateAPIView):
         from_user = self.request.user
         to_user_id = self.request.data.get('user')
         to_user = get_object_or_404(user_models.UserProfile, pk=to_user_id)
-        code, message = follow_models.FollowRequestManager.make_request(from_user, to_user)
+        object, message = follow_models.FollowRequestManager.make_request(from_user, to_user)
 
-        if code == 1:
-            return HttpResponseForbidden("Can't follow self")
-        elif code == 2:
+        if message == "Self":
+            return HttpResponseBadRequest("Can't follow self")
+        elif message == "Recurrent":
             return HttpResponseBadRequest("Already done")
         elif message == "Requested":
             return  Response("Request successfully sent", status=status.HTTP_201_CREATED)

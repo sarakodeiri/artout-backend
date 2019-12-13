@@ -7,11 +7,11 @@ class FollowRequestManager(models.manager):
 
     def make_request(self, from_user, to_user):
         if from_user == to_user:
-            return 1, "Can't follow self"
+            return None, "Self"
 
         if FollowRequest.objects.filter(from_user=from_user, to_user=to_user).exists() \
                 or Follow.objects.filter(follower=from_user, followee=to_user).exists():
-            return 2, "Already following"
+            return None, "Recurrent"
 
         if to_user.is_private:
             return FollowRequest.objects.create(from_user=from_user, to_user=to_user), "Requested"
