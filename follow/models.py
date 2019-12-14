@@ -7,16 +7,16 @@ class FollowRequestManager(models.manager):
 
     def make_request(self, from_user, to_user):
         if from_user == to_user:
-            return None, "Self"
+            return None, 1, "Self"
 
         if FollowRequest.objects.filter(from_user=from_user, to_user=to_user).exists() \
                 or Follow.objects.filter(follower=from_user, followee=to_user).exists():
-            return None, "Recurrent"
+            return None, 2, "Recurrent"
 
         if to_user.is_private:
-            return FollowRequest.objects.create(from_user=from_user, to_user=to_user), "Requested"
+            return FollowRequest.objects.create(from_user=from_user, to_user=to_user), 3, "Requested"
         else:
-            return Follow.objects.create(follower=from_user, followee=to_user), "Added"
+            return Follow.objects.create(follower=from_user, followee=to_user), 4, "Added"
 
     def remove_request(self, from_user, to_user):
         try:
