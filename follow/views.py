@@ -145,6 +145,15 @@ class RequestsDetail(generics.RetrieveUpdateDestroyAPIView):
         else:
             return Response("This request does not exist", status=status.HTTP_404_NOT_FOUND)
 
+    def update(self, request, *args, **kwargs):
+        to_user = request.user
+        from_user = get_object_or_404(user_models.UserProfile, pk=self.kwargs['uid'])
+        removed = follow_models.FollowRequestManager.remove_request(from_user, to_user)
+        if not removed:
+            return Response("This request does not exist", status=status.HTTP_404_NOT_FOUND)
+        follow_models.Follow.objects.create(follower=from_user, followee=to_user)
+
+
 
 
 
