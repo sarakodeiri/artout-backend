@@ -120,8 +120,18 @@ class RequestsList(generics.ListAPIView):
         return follow_models.FollowRequestManager.requests(user)
 
 
-class PendingsDetail(object):
-    pass
+class PendingsDetail(generics.DestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def destroy(self, request, *args, **kwargs):
+        from_user = self.request.user
+        to_user_id = self.request.data.get('user')
+        to_user = get_object_or_404(user_models.UserProfile, pk=to_user_id)
+        result = follow_models.FollowRequestManager.remove_request(from_user, to_user)
+        if result:
+            return Response("Request successfully removed", status=status.HTTP_200_OK)
+        else:
+            return Response("This request does not exist", status=status.HTTP_404_NOT_FOUND)
 
 
 class RequestsDetail(object):
