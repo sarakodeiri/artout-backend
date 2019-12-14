@@ -100,8 +100,8 @@ class PendingsList(generics.ListCreateAPIView):
         return follow_models.FollowRequestManager.pendings(user)
 
     def create(self, request, *args, **kwargs):
-        from_user = self.request.user
-        to_user_id = self.request.data.get('user')
+        from_user = request.user
+        to_user_id = request.data.get('user')
         to_user = get_object_or_404(user_models.UserProfile, pk=to_user_id)
         object, code, message = follow_models.FollowRequestManager.make_request(from_user, to_user)
 
@@ -134,7 +134,7 @@ class PendingsDetail(generics.DestroyAPIView):
             return Response("This request does not exist", status=status.HTTP_404_NOT_FOUND)
 
 
-class RequestsDetail(object):
+class RequestsDetail():
     permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
