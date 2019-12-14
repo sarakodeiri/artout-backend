@@ -152,6 +152,7 @@ class RequestsDetail(generics.RetrieveUpdateDestroyAPIView):
         if not removed:
             return Response("This request does not exist", status=status.HTTP_404_NOT_FOUND)
         follow_models.Follow.objects.create(follower=from_user, followee=to_user)
+        return Response("Request accepted", status=status.HTTP_201_CREATED)
 
 
 
