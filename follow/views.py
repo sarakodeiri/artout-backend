@@ -125,24 +125,22 @@ class PendingsDetail(generics.DestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         from_user = request.user
-        to_user_id = request.data.get('user')
-        to_user = get_object_or_404(user_models.UserProfile, pk=to_user_id)
-        result = follow_models.FollowRequestManager.remove_request(from_user, to_user)
-        if result:
+        to_user = get_object_or_404(user_models.UserProfile, pk=self.kwargs['uid'])
+        removed = follow_models.FollowRequestManager.remove_request(from_user, to_user)
+        if removed:
             return Response("Pending successfully taken back", status=status.HTTP_200_OK)
         else:
             return Response("This request does not exist", status=status.HTTP_404_NOT_FOUND)
 
 
-class RequestsDetail():
+class RequestsDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         to_user = request.user
-        from_user_id = request.data.get('user')
-        from_user = get_object_or_404(user_models.UserProfile, pk=from_user_id)
-        result = follow_models.FollowRequestManager.remove_request(from_user, to_user)
-        if result:
+        from_user = get_object_or_404(user_models.UserProfile, pk=self.kwargs['uid'])
+        removed = follow_models.FollowRequestManager.remove_request(from_user, to_user)
+        if removed:
             return Response("Request successfully declined", status=status.HTTP_200_OK)
         else:
             return Response("This request does not exist", status=status.HTTP_404_NOT_FOUND)
