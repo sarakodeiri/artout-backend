@@ -3,7 +3,7 @@ from django.db import models
 from user.models import UserProfile
 
 
-class FollowRequestManager(models.manager):
+class FollowRequestManager(models.Manager):
 
     def make_request(self, from_user, to_user):
         if from_user == to_user:
