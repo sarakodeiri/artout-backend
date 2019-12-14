@@ -141,7 +141,7 @@ class RequestsDetail(generics.RetrieveUpdateDestroyAPIView):
         from_user = get_object_or_404(user_models.UserProfile, pk=self.kwargs['uid'])
         removed = follow_models.FollowRequestManager.remove_request(from_user, to_user)
         if removed:
-            return Response("Request successfully declined", status=status.HTTP_200_OK)
+            return Response("Request successfully declined", status=status.HTTP_204_NO_CONTENT)
         else:
             return Response("This request does not exist", status=status.HTTP_404_NOT_FOUND)
 
