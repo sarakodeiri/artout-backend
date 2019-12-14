@@ -10,5 +10,5 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserPreviewSerializer(serializers.ModelSerializer):
     class Meta:
-        models = models.UserProfile
-        fields = ('id', 'fist_name', 'last_name', 'username')
+        model = models.UserProfile
+        fields = ('id', 'first_name', 'last_name', 'username', 'avatar')

@@ -54,14 +54,14 @@ class FollowingsDetail(generics.RetrieveDestroyAPIView):
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(queryset, followee__id=self.kwargs['uid'])
+        obj = get_object_or_404(queryset, followee__id=self.kwargs['uid']).followee
         self.check_object_permissions(self.request, obj)
         return obj
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         follower = self.request.user
-        removed = follow_models.Follow.objects.remove_following(follower, instance)
+        removed = follow_models.Follow.objects.remove_follower(follower, instance)
         if removed:
             return Response("User successfully unfollowed", status=status.HTTP_204_NO_CONTENT)
         else:
@@ -77,14 +77,14 @@ class FollowersDetail(generics.RetrieveDestroyAPIView):
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(queryset, follower__id=self.kwargs['uid'])
+        obj = get_object_or_404(queryset, follower__id=self.kwargs['uid']).follower
         self.check_object_permissions(self.request, obj)
         return obj
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         followee = self.request.user
-        removed = follow_models.Follow.objects.remove_following(instance, followee)
+        removed = follow_models.Follow.objects.remove_follower(instance, followee)
         if removed:
             return Response("User successfully removed from your follower's list", status=status.HTTP_204_NO_CONTENT)
         else:
@@ -97,16 +97,16 @@ class PendingsList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return follow_models.FollowRequestManager.pendings(user)
+        return follow_models.FollowRequest.objects.pendings(user)
 
     def create(self, request, *args, **kwargs):
         from_user = request.user
         to_user_id = request.data.get('user')
         to_user = get_object_or_404(user_models.UserProfile, pk=to_user_id)
-        object, code, message = follow_models.FollowRequestManager.make_request(from_user, to_user)
+        request_object, code, message = follow_models.FollowRequest.objects.make_request(from_user,to_user)
 
         if code == 1 or code == 2 or code == 3:
-            return HttpResponseBadRequest({"status_code": code, "status_message": message})
+            return Response({"status_code": code, "status_message": message}, status=status.HTTP_400_BAD_REQUEST)
         elif code == 4 or code == 5:
             return Response({"status_code": code, "status_message": message}, status=status.HTTP_201_CREATED)
 
@@ -117,7 +117,7 @@ class RequestsList(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return follow_models.FollowRequestManager.requests(user)
+        return follow_models.FollowRequest.objects.requests(user)
 
 
 class PendingsDetail(generics.DestroyAPIView):
@@ -126,7 +126,7 @@ class PendingsDetail(generics.DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         from_user = request.user
         to_user = get_object_or_404(user_models.UserProfile, pk=self.kwargs['uid'])
-        removed = follow_models.FollowRequestManager.remove_request(from_user, to_user)
+        removed = follow_models.FollowRequest.objects.remove_request(from_user, to_user)
         if removed:
             return Response("Pending successfully taken back", status=status.HTTP_204_NO_CONTENT)
         else:
@@ -139,7 +139,7 @@ class RequestsDetail(generics.RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         to_user = request.user
         from_user = get_object_or_404(user_models.UserProfile, pk=self.kwargs['uid'])
-        removed = follow_models.FollowRequestManager.remove_request(from_user, to_user)
+        removed = follow_models.FollowRequest.objects.remove_request(from_user, to_user)
         if removed:
             return Response("Request successfully declined", status=status.HTTP_204_NO_CONTENT)
         else:
@@ -148,7 +148,7 @@ class RequestsDetail(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         to_user = request.user
         from_user = get_object_or_404(user_models.UserProfile, pk=self.kwargs['uid'])
-        removed = follow_models.FollowRequestManager.remove_request(from_user, to_user)
+        removed = follow_models.FollowRequest.objects.remove_request(from_user, to_user)
         if not removed:
             return Response("This request does not exist", status=status.HTTP_404_NOT_FOUND)
         follow_models.Follow.objects.create(follower=from_user, followee=to_user)
