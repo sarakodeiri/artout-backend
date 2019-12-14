@@ -105,16 +105,10 @@ class PendingsList(generics.ListCreateAPIView):
         to_user = get_object_or_404(user_models.UserProfile, pk=to_user_id)
         object, code, message = follow_models.FollowRequestManager.make_request(from_user, to_user)
 
-        if code == 1:
-            return HttpResponseBadRequest({"status_code": 1, "status_message": message})
-        elif code == 2:
-            return HttpResponseBadRequest({"status_code": 2, "status_message": message})
-        elif code == 3:
-            return HttpResponseBadRequest({"status_code": 2, "status_message": message})
-        elif code == 4:
-            return Response({"status_code": 4, "status_message": message}, status=status.HTTP_201_CREATED)
-        elif code == 5:
-            return Response({"status_code": 5, "status_message": message}, status=status.HTTP_201_CREATED)
+        if code == 1 or code == 2 or code == 3:
+            return HttpResponseBadRequest({"status_code": code, "status_message": message})
+        elif code == 4 or code == 5:
+            return Response({"status_code": code, "status_message": message}, status=status.HTTP_201_CREATED)
 
 
 class RequestsList(generics.ListAPIView):
