@@ -97,7 +97,7 @@ class PendingsList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return follow_models.FollowRequestManager.pendings(user)
+        return follow_models.FollowRequest.objects.pendings(user)
 
     def create(self, request, *args, **kwargs):
         from_user = request.user
