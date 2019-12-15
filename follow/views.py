@@ -117,7 +117,7 @@ class RequestsList(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return follow_models.FollowRequestManager.requests(user)
+        return follow_models.FollowRequest.objects.requests(user)
 
 
 class PendingsDetail(generics.DestroyAPIView):
