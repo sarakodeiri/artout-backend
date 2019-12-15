@@ -126,7 +126,7 @@ class PendingsDetail(generics.DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         from_user = request.user
         to_user = get_object_or_404(user_models.UserProfile, pk=self.kwargs['uid'])
-        removed = follow_models.FollowRequestManager.remove_request(from_user, to_user)
+        removed = follow_models.FollowRequest.objects.remove_request(from_user, to_user)
         if removed:
             return Response("Pending successfully taken back", status=status.HTTP_204_NO_CONTENT)
         else:
@@ -139,7 +139,7 @@ class RequestsDetail(generics.RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         to_user = request.user
         from_user = get_object_or_404(user_models.UserProfile, pk=self.kwargs['uid'])
-        removed = follow_models.FollowRequestManager.remove_request(from_user, to_user)
+        removed = follow_models.FollowRequest.objects.remove_request(from_user, to_user)
         if removed:
             return Response("Request successfully declined", status=status.HTTP_204_NO_CONTENT)
         else:
