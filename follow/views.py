@@ -54,14 +54,14 @@ class FollowingsDetail(generics.RetrieveDestroyAPIView):
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(queryset, followee__id=self.kwargs['uid'])
+        obj = get_object_or_404(queryset, followee__id=self.kwargs['uid']).followee
         self.check_object_permissions(self.request, obj)
         return obj
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         follower = self.request.user
-        removed = follow_models.Follow.objects.remove_following(follower, instance)
+        removed = follow_models.Follow.objects.remove_follower(follower, instance)
         if removed:
             return Response("User successfully unfollowed", status=status.HTTP_204_NO_CONTENT)
         else:
@@ -77,14 +77,14 @@ class FollowersDetail(generics.RetrieveDestroyAPIView):
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(queryset, follower__id=self.kwargs['uid'])
+        obj = get_object_or_404(queryset, follower__id=self.kwargs['uid']).follower
         self.check_object_permissions(self.request, obj)
         return obj
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         followee = self.request.user
-        removed = follow_models.Follow.objects.remove_following(instance, followee)
+        removed = follow_models.Follow.objects.remove_follower(instance, followee)
         if removed:
             return Response("User successfully removed from your follower's list", status=status.HTTP_204_NO_CONTENT)
         else:
