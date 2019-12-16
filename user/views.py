@@ -19,10 +19,5 @@ class UserDetail(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.UserSerializer
     queryset = UserProfile.objects.all()
-
-    def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(queryset, username=self.kwargs['uname'])
-        self.check_object_permissions(self.request, obj)
-        return obj
+    lookup_field = "username"
 
