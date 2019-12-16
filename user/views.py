@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
@@ -13,16 +15,14 @@ class UserList(generics.ListAPIView):
     queryset = UserProfile.objects.all()
 
 
-class UserDetail(generics.ListAPIView):
+class UserDetail(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.UserSerializer
     queryset = UserProfile.objects.all()
 
     def get_object(self):
-        try:
-            user = UserProfile.objects.get(username=self.kwargs['un'])
-            id = user.id
-            return Response(id, status=status.HTTP_200_OK)
-        except user.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = get_object_or_404(queryset, pk=self.kwargs['ud'])
+        self.check_object_permissions(self.request, obj)
+        return obj
 
