@@ -16,6 +16,8 @@ class EventList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         owner_id = self.request.query_params.get('owner')
+        if owner_id is None:
+            owner_id = self.request.user.id
         return models.Event.objects.filter(owner_id=owner_id)
 
     def create(self, request, *args, **kwargs):
