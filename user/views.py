@@ -20,8 +20,9 @@ class UserDetail(generics.ListAPIView):
 
     def get_object(self):
         try:
-            id = UserProfile.objects.get(username=self.kwargs['un'])
+            user = UserProfile.objects.get(username=self.kwargs['un'])
+            id = user.id
             return Response(id, status=status.HTTP_200_OK)
-        except id.DoesNotExist:
+        except user.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
