@@ -10,3 +10,4 @@ class UserList(generics.ListAPIView):
     serializer_class = serializers.UserSerializer
     queryset = UserProfile.objects.all()
 
+class UserDetail(generics.ListAPIView):
