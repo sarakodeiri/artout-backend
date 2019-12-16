@@ -22,7 +22,7 @@ class UserDetail(generics.RetrieveAPIView):
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(queryset, pk=self.kwargs['ud'])
+        obj = get_object_or_404(queryset, username=self.kwargs['ud'])
         self.check_object_permissions(self.request, obj)
         return obj
 
