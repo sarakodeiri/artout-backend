@@ -31,7 +31,7 @@ class EventSerializer(serializers.ModelSerializer):
         instance.end_date = validated_data.get('end_date', instance.end_date)
         instance.picture_url = validated_data.get('picture_url', instance.picture_url)
         instance.category = validated_data.get('category', instance.category)
-        models.Location.objects.update(**validated_data)
+        models.Location.objects.update(**location)
         return instance
 
 
