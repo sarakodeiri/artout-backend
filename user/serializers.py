@@ -19,11 +19,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
     followers_count = serializers.SerializerMethodField()
     followings_count = serializers.SerializerMethodField()
     events_count = serializers.SerializerMethodField()
+    state = serializers.SerializerMethodField()
 
     class Meta:
         model = models.UserProfile
         fields = ('id', 'first_name', 'last_name', 'username', 'date_joined', 'avatar', 'is_private',
-                  'followers_count', 'followings_count', 'events_count')
+                  'followers_count', 'followings_count', 'events_count', 'state')
 
     def get_followers_count(self, obj):
         return obj.followers_count
@@ -33,3 +34,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     def get_events_count(self, obj):
         return obj.events_count
+
+    def get_state(self, obj):
+        return obj.state
