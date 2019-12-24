@@ -27,9 +27,7 @@ class UserProfileView(generics.RetrieveAPIView):
     serializer_class = serializers.UserProfileSerializer
 
     def get_queryset(self):
-        user_id = self.request.query_params.get('user')
-        if user_id is None:
-            user_id = self.request.user.id
+        user_id = self.request.query_params.get('user', self.request.user.id)
 
         user = UserProfile.objects.filter(id=user_id).annotate(followers_count=db_models.Count('followers'),
                                                                followings_count=db_models.Count('followings'),
