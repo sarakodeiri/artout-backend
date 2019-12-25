@@ -36,4 +36,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return obj.events_count
 
     def get_state(self, obj):
-        return obj.state
+        user = self.context['request'].user
+        if user == obj:
+            return 0
+        elif follow_models.Follow.objects.filter(followee=obj, follower=user).exists():
+            return 1
+        elif follow_models.FollowRequest.objects.filter(to_user=obj, from_user=user).exists():
+            return 2
+        else:
+            return 3

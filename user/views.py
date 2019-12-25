@@ -36,6 +36,6 @@ class UserProfileView(generics.RetrieveAPIView):
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        user_id = self.request.user.id
+        user_id = self.request.query_params.get('user', self.request.user.id)
         obj = get_object_or_404(queryset, pk=user_id)
         return obj
