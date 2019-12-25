@@ -10,9 +10,21 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserPreviewSerializer(serializers.ModelSerializer):
+    state = serializers.SerializerMethodField()
     class Meta:
         model = models.UserProfile
-        fields = ('id', 'first_name', 'last_name', 'username', 'avatar')
+        fields = ('id', 'first_name', 'last_name', 'username', 'avatar', 'state')
+
+    def get_state(self, obj):
+        user = self.context['request'].user
+        if user == obj:
+            return 0
+        elif follow_models.Follow.objects.filter(followee=obj, follower=user).exists():
+            return 1
+        elif follow_models.FollowRequest.objects.filter(to_user=obj, from_user=user).exists():
+            return 2
+        else:
+            return 3
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
