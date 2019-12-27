@@ -1,6 +1,6 @@
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
+from url_filter.integrations.drf import DjangoFilterBackend
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
@@ -15,7 +15,7 @@ class EventList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.EventSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['category']
+    filter_fields = ['title', 'owner', 'start_date', 'end_date', 'description', 'category']
 
     def get_queryset(self):
         owner_id = self.request.query_params.get('owner')
