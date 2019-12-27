@@ -1,5 +1,6 @@
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
