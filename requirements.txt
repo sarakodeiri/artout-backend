@@ -6,6 +6,7 @@ Django==2.2.2
 django-rest-swagger==2.2.0
 djangorestframework==3.9.4
 djangorestframework-simplejwt==4.3.0
+django-filter==2.2.0
 get==2019.4.13
 httplib2==0.13.0
 idna==2.8
