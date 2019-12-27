@@ -30,6 +30,7 @@ class EventList(generics.ListCreateAPIView):
                 ids.append(following.id)
             for public_user in public_users:
                 ids.append(public_user.id)
+            return models.Event.objects.filter(owner__in=ids)
 
         return models.Event.objects.filter(owner_id=owner_id)
 
