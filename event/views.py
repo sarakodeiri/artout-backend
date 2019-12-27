@@ -14,6 +14,8 @@ from . import models
 class EventList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.EventSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category']
 
     def get_queryset(self):
         owner_id = self.request.query_params.get('owner')
