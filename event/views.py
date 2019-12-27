@@ -1,5 +1,6 @@
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
+from url_filter.integrations.drf import DjangoFilterBackend
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
@@ -8,16 +9,29 @@ from rest_framework import status
 
 from . import serializers
 from . import models
+from follow import models as follow_models
+from user import models as user_models
 
 
 class EventList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.EventSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title', 'owner', 'start_date', 'end_date', 'description', 'category']
 
     def get_queryset(self):
         owner_id = self.request.query_params.get('owner')
         if owner_id is None:
-            owner_id = self.request.user.id
+            followings = follow_models.Follow.objects.followings(self.request.user)
+            public_users = user_models.UserProfile.objects.filter(is_private=False)
+            ids = []
+            for following in followings:
+                ids.append(following.id)
+            for public_user in public_users:
+                ids.append(public_user.id)
+            ids.append(self.request.user.id)
+            return models.Event.objects.filter(owner__in=ids)
+
         return models.Event.objects.filter(owner_id=owner_id)
 
     def create(self, request, *args, **kwargs):
