@@ -91,4 +91,3 @@ class EventCheckinDetail(generics.DestroyAPIView):
             return HttpResponseForbidden()
         self.check_object_permissions(self.request, obj)
         return obj
-
