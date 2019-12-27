@@ -9,8 +9,8 @@ from rest_framework import status
 
 from . import serializers
 from . import models
-from follow import models
-from user import models
+from follow import models as follow_models
+from user import models as user_models
 
 
 class EventList(generics.ListCreateAPIView):
@@ -22,8 +22,8 @@ class EventList(generics.ListCreateAPIView):
     def get_queryset(self):
         owner_id = self.request.query_params.get('owner')
         if owner_id is None:
-            followings = models.Follow.objects.followings(self.request.user)
-            public_users = models.UserProfile.objects.filter(is_private=False)
+            followings = follow_models.Follow.objects.followings(self.request.user)
+            public_users = user_models.UserProfile.objects.filter(is_private=False)
             ids = []
             for following in followings:
                 ids.append(following.id)
