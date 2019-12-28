@@ -2,6 +2,7 @@ from django.db import models as db_models
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework import filters
 
 
 from user.models import UserProfile
@@ -10,8 +11,10 @@ from follow import models as follow_models
 
 
 class UserList(generics.ListAPIView):
-    permission_class = (IsAdminUser,)
-    serializer_class = serializers.UserSerializer
+    search_fields = ['username']
+    filter_backends = (filters.SearchFilter,)
+    permission_class = (IsAuthenticated,)
+    serializer_class = serializers.UserPreviewSerializer
     queryset = UserProfile.objects.all()
 
 
