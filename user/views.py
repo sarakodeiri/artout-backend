@@ -14,7 +14,7 @@ class UserList(generics.ListAPIView):
     search_fields = ['username']
     filter_backends = (filters.SearchFilter,)
     permission_class = (IsAuthenticated,)
-    serializer_class = serializers.UserSerializer
+    serializer_class = serializers.UserPreviewSerializer
     queryset = UserProfile.objects.all()
 
 
