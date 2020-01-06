@@ -32,12 +32,14 @@ class CheckinList(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class CheckinDetail(generics.DestroyAPIView):
-    queryset = models.CheckIn.objects.all()
+class CheckinDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.CheckIn.objects.all().select_related("user", "event")
+    serializer_class = serializers.CheckinSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(queryset, pk=self.kwargs['cid'])
+        obj = get_object_or_404(queryset, pk=self.kwargs['id'])
         if self.request.user != obj.owner:
             return HttpResponseForbidden()
         self.check_object_permissions(self.request, obj)

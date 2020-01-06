@@ -11,6 +11,7 @@ class CheckinSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CheckIn
         fields = ['event', 'user', 'submitted_time', 'go_time']
+        read_only_fields = ('event', 'user')
 
     def get_user(self, obj):
         user_serializer = user_serializers.UserPreviewSerializer(obj.user)
