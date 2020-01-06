@@ -33,11 +33,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
     followings_count = serializers.SerializerMethodField()
     events_count = serializers.SerializerMethodField()
     state = serializers.SerializerMethodField()
+    checkin_count = serializers.SerializerMethodField()
 
     class Meta:
         model = models.UserProfile
         fields = ('id', 'first_name', 'last_name', 'username', 'date_joined', 'avatar', 'is_private',
-                  'followers_count', 'followings_count', 'events_count', 'state')
+                  'followers_count', 'followings_count', 'events_count', 'state', 'checkin_count')
 
     def get_followers_count(self, obj):
         return obj.followers_count
@@ -58,3 +59,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             return 2
         else:
             return 3
+
+    def get_checkin_count(self, obj):
+        return obj.checkin_count
