@@ -36,7 +36,4 @@ class EventSerializer(serializers.ModelSerializer):
         return instance
 
 
-class CheckinSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.CheckIn
-        fields = '__all__'
+
