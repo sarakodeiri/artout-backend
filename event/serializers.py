@@ -10,10 +10,15 @@ class LocationSerializer(serializers.ModelSerializer):
 
 class EventSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
+    checkin_count = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Event
-        fields = ('id', 'title', 'description', 'start_date', 'end_date', 'picture_url', 'owner', 'location', 'category')
+        fields = ('id', 'title', 'description', 'start_date', 'end_date', 'picture_url', 'owner', 'location',
+                  'category', 'checkin_count')
+
+    def get_checkin_count(self, obj):
+        return obj.checkin_count
 
     def create(self, validated_data):
         location = validated_data.pop('location')
