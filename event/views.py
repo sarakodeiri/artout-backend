@@ -42,7 +42,7 @@ class EventList(generics.ListCreateAPIView):
 class EventDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.EventSerializer
-    queryset = models.Event.objects.all()
+    queryset = models.Event.objects.all().annotate(checkin_count=db_models.Count('checkins'))
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())

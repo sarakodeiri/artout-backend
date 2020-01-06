@@ -30,12 +30,12 @@ class CheckinList(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         data = request.data
         user = request.user
-        data["user"] = user.id
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        data["user_id"] = user.id
+        if models.CheckIn.objects.filter(user=request.user, event_id=request.data.get("event_id")).exists():
+            return HttpResponseForbidden()
+        obj = models.CheckIn.objects.create(**data)
+        data["id"] = obj.id
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
 class CheckinDetail(generics.RetrieveUpdateDestroyAPIView):
