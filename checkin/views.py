@@ -9,17 +9,22 @@ from rest_framework import status
 
 from . import serializers
 from . import models
-from event import models as event_models
+from follow import models as follow_models
+from user import models as user_models
 
 
 class CheckinList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.CheckinSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user', 'event', 'go_time', 'submitted_time']
 
     def get_queryset(self):
-        event_id = self.kwargs.get('eid')
-        event = get_object_or_404(models.Event, id=event_id)
-        return models.CheckIn.objects.filter(event=event)
+        followings = follow_models.Follow.objects.filter(
+            follower=self.request.user).values_list("followee_id", flat=True)
+        public_users = user_models.UserProfile.objects.filter(is_private=False).values_list("id", flat=True)
+        ids = list(followings) + list(public_users) + [self.request.user.id]
+        return models.CheckIn.objects.filter(user_id__in=ids, event__owner__in=ids).select_related("user", "event")
 
     def create(self, request, *args, **kwargs):
         data = request.data
