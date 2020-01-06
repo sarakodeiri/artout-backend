@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
 
-    path('checkin/', views.CheckinList.as_view()),
-    path('checkin/<int:id>', views.CheckinDetail.as_view()),
+    path('', views.CheckinList.as_view()),
+    path('<int:id>/', views.CheckinDetail.as_view()),
 
 ]
