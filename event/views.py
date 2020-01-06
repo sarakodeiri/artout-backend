@@ -23,20 +23,10 @@ class EventList(generics.ListCreateAPIView):
     filter_fields = ['title', 'owner', 'start_date', 'end_date', 'description', 'category']
 
     def get_queryset(self):
-        owner_id = self.request.query_params.get('owner')
-        if owner_id is None:
-            followings = follow_models.Follow.objects.filter(follower=self.request.user).values_list("followee_id", flat=True)
-            public_users = user_models.UserProfile.objects.filter(is_private=False).values_list("id", flat=True)
-            ids = list(followings) + list(public_users) + [self.request.user.id]
-            return models.Event.objects.filter(owner__in=ids).annotate(checkin_count=db_models.Count('checkins'))
-
-        owner_ispublic = user_models.UserProfile.objects.filter(is_private=False, id=owner_id).exists()
-        owner_isfollowed = follow_models.Follow.objects.filter(follower=self.request.user, followee=owner_id).exists()
-
-        if owner_ispublic or owner_isfollowed or owner_id == self.request.user.id:
-            return models.Event.objects.filter(owner_id=owner_id).annotate(checkin_count=db_models.Count('checkins'))
-
-        raise PermissionDenied()
+        followings = follow_models.Follow.objects.filter(follower=self.request.user).values_list("followee_id", flat=True)
+        public_users = user_models.UserProfile.objects.filter(is_private=False).values_list("id", flat=True)
+        ids = list(followings) + list(public_users) + [self.request.user.id]
+        return models.Event.objects.filter(owner__in=ids).annotate(checkin_count=db_models.Count('checkins'))
 
     def create(self, request, *args, **kwargs):
         data = request.data
