@@ -11,10 +11,11 @@ from . import serializers
 from . import models
 from follow import models as follow_models
 from user import models as user_models
+from . import permissions as checkin_permissions
 
 
 class CheckinList(generics.ListCreateAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, checkin_permissions.EventPermission,)
     serializer_class = serializers.CheckinSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user', 'event', 'go_time', 'submitted_time']
@@ -40,7 +41,7 @@ class CheckinList(generics.ListCreateAPIView):
 class CheckinDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.CheckIn.objects.all().select_related("user", "event")
     serializer_class = serializers.CheckinSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, checkin_permissions.EventPermission,)
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
