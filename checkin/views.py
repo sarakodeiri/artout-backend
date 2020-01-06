@@ -9,9 +9,10 @@ from rest_framework import status
 
 from . import serializers
 from . import models
+from event import models as event_models
 
 
-class EventCheckinList(generics.ListCreateAPIView):
+class CheckinList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.CheckinSerializer
 
@@ -31,7 +32,7 @@ class EventCheckinList(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class EventCheckinDetail(generics.DestroyAPIView):
+class CheckinDetail(generics.DestroyAPIView):
     queryset = models.CheckIn.objects.all()
 
     def get_object(self):
