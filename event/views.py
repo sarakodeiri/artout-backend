@@ -2,6 +2,8 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
 from url_filter.integrations.drf import DjangoFilterBackend
+from django.db import models as db_models
+
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
@@ -23,16 +25,16 @@ class EventList(generics.ListCreateAPIView):
     def get_queryset(self):
         owner_id = self.request.query_params.get('owner')
         if owner_id is None:
-            followings = follow_models.Follow.objects.followings(self.request.user).values_list("followee_id", flat=True)
+            followings = follow_models.Follow.objects.filter(follower=self.request.user).values_list("followee_id", flat=True)
             public_users = user_models.UserProfile.objects.filter(is_private=False).values_list("id", flat=True)
-            ids = followings + public_users + self.request.user.id
-            return models.Event.objects.filter(owner__in=ids)
+            ids = list(followings) + list(public_users) + [self.request.user.id]
+            return models.Event.objects.filter(owner__in=ids).annotate(checkin_count=db_models.Count('checkins'))
 
         owner_ispublic = user_models.UserProfile.objects.filter(is_private=False, id=owner_id).exists()
         owner_isfollowed = follow_models.Follow.objects.filter(follower=self.request.user, followee=owner_id).exists()
 
         if owner_ispublic or owner_isfollowed or owner_id == self.request.user.id:
-            return models.Event.objects.filter(owner_id=owner_id)
+            return models.Event.objects.filter(owner_id=owner_id).annotate(checkin_count=db_models.Count('checkins'))
 
         raise PermissionDenied()
 
