@@ -13,9 +13,11 @@ class CheckinSerializer(serializers.ModelSerializer):
         fields = ['event', 'user', 'submitted_time', 'go_time', 'checkin_event', 'checkin_user']
 
     def get_checkin_user(self, obj):
-        user_serializer = user_serializers.UserPreviewSerializer(obj.user)
+        kwargs = {}
+        kwargs['context'] = self.context
+        user_serializer = user_serializers.UserPreviewSerializer(obj.user, **kwargs)
         return user_serializer.data
 
     def get_checkin_event(self, obj):
-        event_serializer = event_serializers.EventSerializer(obj.event)
+        event_serializer = event_serializers.EventPreviewSerializer(obj.event)
         return event_serializer.data

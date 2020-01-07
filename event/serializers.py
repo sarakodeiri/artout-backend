@@ -41,4 +41,15 @@ class EventSerializer(serializers.ModelSerializer):
         return instance
 
 
+class EventPreviewSerializer(serializers.ModelSerializer):
+    location = LocationSerializer()
+
+    class Meta:
+        model = models.Event
+        fields = ('id', 'title', 'description', 'start_date', 'end_date', 'picture_url', 'owner', 'location',
+                  'category')
+
+
+
+
 

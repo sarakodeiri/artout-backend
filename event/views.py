@@ -23,7 +23,8 @@ class EventList(generics.ListCreateAPIView):
     filter_fields = ['title', 'owner', 'start_date', 'end_date', 'description', 'category']
 
     def get_queryset(self):
-        followings = follow_models.Follow.objects.filter(follower=self.request.user).values_list("followee_id", flat=True)
+        followings = follow_models.Follow.objects.filter(follower=self.request.user).values_list(
+            "followee_id", flat=True)
         public_users = user_models.UserProfile.objects.filter(is_private=False).values_list("id", flat=True)
         ids = list(followings) + list(public_users) + [self.request.user.id]
         return models.Event.objects.filter(owner__in=ids).annotate(checkin_count=db_models.Count('checkins'))

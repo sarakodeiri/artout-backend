@@ -12,6 +12,7 @@ from . import models
 from follow import models as follow_models
 from user import models as user_models
 from . import permissions as checkin_permissions
+from event import models as event_models
 
 
 class CheckinList(generics.ListCreateAPIView):
@@ -33,12 +34,15 @@ class CheckinList(generics.ListCreateAPIView):
         data["user_id"] = user.id
         if models.CheckIn.objects.filter(user=request.user, event_id=request.data.get("event_id")).exists():
             return HttpResponseForbidden()
+        if data.get("go_time") is None:
+            data["go_time"] = event_models.Event.objects.get(id=data["event_id"]).start_date
         obj = models.CheckIn.objects.create(**data)
         data["id"] = obj.id
+        data["submitted_time"] = obj.submitted_time
         return Response(data, status=status.HTTP_201_CREATED)
 
 
-class CheckinDetail(generics.RetrieveUpdateDestroyAPIView):
+class CheckinDetail(generics.DestroyAPIView):
     queryset = models.CheckIn.objects.all().select_related("user", "event")
     serializer_class = serializers.CheckinSerializer
     permission_classes = (IsAuthenticated, checkin_permissions.EventPermission,)
@@ -46,7 +50,7 @@ class CheckinDetail(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         obj = get_object_or_404(queryset, pk=self.kwargs['id'])
-        if self.request.user != obj.owner:
+        if self.request.user != obj.user:
             return HttpResponseForbidden()
         self.check_object_permissions(self.request, obj)
         return obj
