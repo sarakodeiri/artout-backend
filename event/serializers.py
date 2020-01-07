@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from . import models
+from checkin import models as checkin_models
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -11,14 +12,18 @@ class LocationSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
     checkin_count = serializers.SerializerMethodField()
+    is_checked_in = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Event
         fields = ('id', 'title', 'description', 'start_date', 'end_date', 'picture_url', 'owner', 'location',
-                  'category', 'checkin_count')
+                  'category', 'checkin_count', 'is_checked_in')
 
     def get_checkin_count(self, obj):
         return obj.checkin_count
+
+    def get_is_checked_in(self, obj):
+        return checkin_models.CheckIn.objects.filter(user=self.context["request"].user, event=obj).exists()
 
     def create(self, validated_data):
         location = validated_data.pop('location')
@@ -43,13 +48,12 @@ class EventSerializer(serializers.ModelSerializer):
 
 class EventPreviewSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
+    is_checked_in = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Event
         fields = ('id', 'title', 'description', 'start_date', 'end_date', 'picture_url', 'owner', 'location',
-                  'category')
+                  'category', 'is_checked_in')
 
-
-
-
-
+    def get_is_checked_in(self, obj):
+        return checkin_models.CheckIn.objects.filter(user=self.context["request"].user, event=obj).exists()
