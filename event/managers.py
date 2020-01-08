@@ -1,5 +1,3 @@
-from functools import cmp_to_key
-
 from django.db import models
 
 from follow import models as follow_models
@@ -9,6 +7,22 @@ from event import models as event_models
 
 
 class EventManager(models.Manager):
+    def compare(self, item1, item2):
+        if item1.checkin is not None:
+            time1 = item1.checkin.submitted_time
+        else:
+            time1 = item1.created_at
+        if item2.checkin is not None:
+            time2 = item1.checkin.submitted_time
+        else:
+            time2 = item1.created_at
+
+        if time1 > time2:
+            return 1
+        elif time1 == time2:
+            return 0
+        return -1
+
     def get_timeline_events(self, user):
         followings = follow_models.Follow.objects.filter(
             follower=user).values_list("followee_id", flat=True)
@@ -21,6 +35,6 @@ class EventManager(models.Manager):
                                                 (models.Q(checkins__user_id__in=ids) &
                                                  models.Q(owner_id__in=ids))).prefetch_related(
                                                  models.Prefetch('checkins', queryset))
-        ordered = sorted(followees_events, key=cmp_to_key(self.compare))
+        ordered = sorted(followees_events, key=lambda x,y: EventManager.compare(x,y))
 
         return ordered
