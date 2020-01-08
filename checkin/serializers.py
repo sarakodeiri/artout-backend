@@ -19,5 +19,7 @@ class CheckinSerializer(serializers.ModelSerializer):
         return user_serializer.data
 
     def get_checkin_event(self, obj):
-        event_serializer = event_serializers.EventPreviewSerializer(obj.event)
+        kwargs = {}
+        kwargs['context'] = self.context
+        event_serializer = event_serializers.EventPreviewSerializer(obj.event, **kwargs)
         return event_serializer.data
