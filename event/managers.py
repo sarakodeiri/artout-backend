@@ -9,12 +9,12 @@ from event import models as event_models
 
 
 def compare(item1, item2):
-    if item1.checkin is not None:
-        time1 = item1.checkin.submitted_time
+    if len(item1.last_checkin) > 0 :
+        time1 = item1.last_checkin[0].submitted_time
     else:
         time1 = item1.created_at
-    if item2.checkin is not None:
-        time2 = item1.checkin.submitted_time
+    if len(item2.last_checkin) > 0:
+        time2 = item1.last_checkin[0].submitted_time
     else:
         time2 = item1.created_at
 
@@ -37,7 +37,8 @@ class EventManager(models.Manager):
         followees_events = event_models.Event.objects.filter(models.Q(owner_id__in=followings) |
                                                 (models.Q(checkins__user_id__in=ids) &
                                                  models.Q(owner_id__in=ids))).prefetch_related(
-                                                 models.Prefetch('checkins', queryset))
+                                                 models.Prefetch('checkins', queryset, to_attr='last_checkin'))\
+            .annotate(checkin_count=models.Count('checkins'))
         ordered = sorted(followees_events, key=cmp_to_key(compare))
 
         return ordered
