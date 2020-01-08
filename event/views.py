@@ -68,3 +68,12 @@ class EventDetail(generics.RetrieveUpdateDestroyAPIView):
             return HttpResponseForbidden()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class Timeline(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.EventSerializer
+
+    def get_queryset(self):
+        qs = models.Event.objects.get_timeline_events(self.request.user)
+        return qs
