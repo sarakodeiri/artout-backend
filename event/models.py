@@ -1,5 +1,6 @@
 from django.db import models
 from user.models import UserProfile
+from datetime import datetime
 
 
 class Location(models.Model):
@@ -16,6 +17,7 @@ class Event(models.Model):
     owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='events')
     location = models.ForeignKey(Location, on_delete=models.PROTECT)
     category = models.CharField(max_length=20)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
