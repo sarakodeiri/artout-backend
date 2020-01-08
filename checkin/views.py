@@ -16,7 +16,7 @@ from event import models as event_models
 
 
 class CheckinList(generics.ListCreateAPIView):
-    permission_classes = (IsAuthenticated, checkin_permissions.EventPermission,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.CheckinSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user', 'event', 'go_time', 'submitted_time']
@@ -32,6 +32,14 @@ class CheckinList(generics.ListCreateAPIView):
         data = request.data
         user = request.user
         data["user_id"] = user.id
+        followings = follow_models.Follow.objects.filter(
+            follower=request.user).values_list("followee_id", flat=True)
+        public_users = user_models.UserProfile.objects.filter(is_private=False).values_list("id", flat=True)
+        ids = list(followings) + list(public_users) + [request.user.id]
+        event_id = request.data.get("event_id")
+        event = get_object_or_404(event_models.Event, pk=event_id)
+        if not event.owner_id in ids:
+            return HttpResponseForbidden()
         if models.CheckIn.objects.filter(user=request.user, event_id=request.data.get("event_id")).exists():
             return HttpResponseForbidden()
         if data.get("go_time") is None:

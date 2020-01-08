@@ -14,4 +14,6 @@ class EventPermission(BasePermission):
         ids = list(followings) + list(public_users) + [request.user.id]
         event_id = request.data.get("event_id")
         event = get_object_or_404(event_models.Event, pk=event_id)
+        print(event)
+        print(event.owner_id in ids)
         return event.owner_id in ids
