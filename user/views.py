@@ -13,7 +13,7 @@ from follow import models as follow_models
 class UserList(generics.ListAPIView):
     search_fields = ['username']
     filter_backends = (filters.SearchFilter,)
-    permission_classes =  (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.UserPreviewSerializer
     queryset = UserProfile.objects.all()
 
@@ -34,7 +34,8 @@ class UserProfileView(generics.RetrieveAPIView):
 
         user = UserProfile.objects.filter(id=user_id).annotate(followers_count=db_models.Count('followers'),
                                                                followings_count=db_models.Count('followings'),
-                                                               events_count=db_models.Count('events'))
+                                                               events_count=db_models.Count('events'),
+                                                               checkin_count=db_models.Count('checkins'))
         return user
 
     def get_object(self):
