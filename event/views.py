@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
@@ -77,3 +78,14 @@ class Timeline(generics.ListAPIView):
     def get_queryset(self):
         qs = models.Event.objects.get_timeline_events(self.request.user)
         return qs
+
+    def paginate_queryset(self, queryset):
+        page_size = self.request.GET.get('page_size')
+        paginator = Paginator(queryset, page_size)
+
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return page_obj
+
+    def get_paginated_response(self, data):
+        return Response(data)
