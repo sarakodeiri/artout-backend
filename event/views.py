@@ -19,9 +19,14 @@ from user import models as user_models
 
 class EventList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = serializers.EventSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['title', 'owner', 'start_date', 'end_date', 'description', 'category']
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return serializers.EventCreationSerializer
+        else:
+            return serializers.EventSerializer
 
     def get_queryset(self):
         followings = follow_models.Follow.objects.filter(follower=self.request.user).values_list(
