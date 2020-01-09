@@ -19,10 +19,10 @@ def compare(item1, item2):
         time2 = item1.created_at
 
     if time1 > time2:
-        return 1
+        return -1
     elif time1 == time2:
         return 0
-    return -1
+    return 1
 
 
 class EventManager(models.Manager):
