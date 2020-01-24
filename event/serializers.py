@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from . import models
 from checkin import models as checkin_models
+from .managers import EventPictureManager
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -11,10 +12,11 @@ class LocationSerializer(serializers.ModelSerializer):
 
 class EventCreationSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
+    picture_manager = EventPictureManager()
 
     class Meta:
         model = models.Event
-        fields = ('id', 'title', 'description', 'start_date', 'end_date', 'picture_url', 'owner', 'location',
+        fields = ('id', 'title', 'description', 'start_date', 'end_date', 'picture_exists', 'owner', 'location',
                   'category')
 
     def create(self, validated_data):
@@ -23,6 +25,9 @@ class EventCreationSerializer(serializers.ModelSerializer):
         validated_data['location'] = location
         event = models.Event.objects.create(**validated_data)
         event.save()
+        if event.picture_exists:
+            picture_url = self.picture_manager.create_post_url(event.id)
+            setattr(event, "url", picture_url)
         return event
 
 

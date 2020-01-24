@@ -43,3 +43,7 @@ class EventManager(models.Manager):
         ordered = sorted(followees_events, key=cmp_to_key(compare))
 
         return ordered
+
+
+class EventPictureManager:
+    pass
