@@ -41,7 +41,7 @@ class EventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Event
-        fields = ('id', 'title', 'description', 'start_date', 'end_date', 'picture_url', 'owner', 'location',
+        fields = ('id', 'title', 'description', 'start_date', 'end_date', 'owner', 'location',
                   'category', 'checkin_count', 'is_checked_in')
 
     def get_checkin_count(self, obj):
