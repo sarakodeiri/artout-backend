@@ -8,7 +8,7 @@ from event import models as event_models
 
 class EventPermission(BasePermission):
     def has_permission(self, request, view):
-        if request.GET:
+        if request.method == "GET":
             return True
         followings = follow_models.Follow.objects.filter(
             follower=request.user).values_list("followee_id", flat=True)
