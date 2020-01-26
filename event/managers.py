@@ -1,6 +1,7 @@
 from functools import cmp_to_key
 
 from django.db import models
+from boto3 import client as boto3_cli
 
 from follow import models as follow_models
 from user import models as user_models
@@ -43,3 +44,22 @@ class EventManager(models.Manager):
         ordered = sorted(followees_events, key=cmp_to_key(compare))
 
         return ordered
+
+
+class EventPictureManager:
+    def __init__(self):
+        self.s3_cli = boto3_cli('s3', endpoint_url="http://194.5.193.99:9000/",
+                                aws_access_key_id="AKIAIOSFODNN7EXAMPLE",
+                                aws_secret_access_key="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
+        self.bucket_name = "events"
+
+    def create_post_url(self, event_id, expiration=3600):
+        response = self.s3_cli.generate_presigned_post(self.bucket_name, str(event_id), ExpiresIn=expiration)
+        return response
+
+    def get_picture_url(self, event_id, expiration=3600):
+        picture_url = self.s3_cli.generate_presigned_url('get_object',
+                                                         Params={'Bucket': "events",
+                                                                 'Key': str(event_id)},
+                                                         ExpiresIn=expiration)
+        return picture_url
