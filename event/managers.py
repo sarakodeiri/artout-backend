@@ -56,3 +56,10 @@ class EventPictureManager:
     def create_post_url(self, event_id, expiration=3600):
         response = self.s3_cli.generate_presigned_post(self.bucket_name, str(event_id), ExpiresIn=expiration)
         return response
+
+    def get_picture_url(self, event_id, expiration=3600):
+        picture_url = self.s3_cli.generate_presigned_url('get_object',
+                                                         Params={'Bucket': "events",
+                                                                 'Key': str(event_id)},
+                                                         ExpiresIn=expiration)
+        return picture_url
