@@ -47,7 +47,6 @@ class EventManager(models.Manager):
 
 
 class EventPictureManager:
-
     def __init__(self):
         self.s3_cli = boto3_cli('s3', endpoint_url="http://194.5.193.99:9000/",
                                 aws_access_key_id="AKIAIOSFODNN7EXAMPLE",

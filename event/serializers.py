@@ -13,11 +13,17 @@ class LocationSerializer(serializers.ModelSerializer):
 class EventCreationSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
     picture_manager = EventPictureManager()
+    s3_response = serializers.SerializerMethodField()
+
+    def get_s3_response(self, obj):
+        if obj.picture_exists:
+            picture_url = self.picture_manager.create_post_url(obj.id)
+            return picture_url
 
     class Meta:
         model = models.Event
         fields = ('id', 'title', 'description', 'start_date', 'end_date', 'picture_exists', 'owner', 'location',
-                  'category')
+                  'category', 's3_response')
 
     def create(self, validated_data):
         location = validated_data.pop('location')
@@ -25,9 +31,6 @@ class EventCreationSerializer(serializers.ModelSerializer):
         validated_data['location'] = location
         event = models.Event.objects.create(**validated_data)
         event.save()
-        if event.picture_exists:
-            picture_url = self.picture_manager.create_post_url(event.id)
-            setattr(event, "s3_response", picture_url)
         return event
 
 
