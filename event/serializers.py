@@ -36,6 +36,7 @@ class EventCreationSerializer(serializers.ModelSerializer):
 
 class EventSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
+    picture_manager = EventPictureManager()
     checkin_count = serializers.SerializerMethodField()
     is_checked_in = serializers.SerializerMethodField()
     picture_url = serializers.SerializerMethodField()
