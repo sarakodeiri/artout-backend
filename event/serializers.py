@@ -27,7 +27,7 @@ class EventCreationSerializer(serializers.ModelSerializer):
         event.save()
         if event.picture_exists:
             picture_url = self.picture_manager.create_post_url(event.id)
-            setattr(event, "url", picture_url)
+            setattr(event, "s3_response", picture_url)
         return event
 
 
